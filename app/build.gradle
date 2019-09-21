@@ -3,6 +3,9 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
+    lintOptions {
+        disable 'InvalidPackage'
+    }
     defaultConfig {
         applicationId "com.work.criminalintent"
         minSdkVersion 19
