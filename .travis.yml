@@ -1,0 +1,14 @@
+language: android
+dist: trusty
+android:
+  components:
+    - build-tools-29.0.2
+    - android-29
+    - extra
+
+notifications:
+  email:
+    recipients:
+      - lemdyanov5@mail.ru
+    on_success: never # default: change
+    on_failure: always # default: always
