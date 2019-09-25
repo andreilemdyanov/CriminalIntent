@@ -21,6 +21,9 @@ public class Crime {
     @Getter
     @Setter
     private boolean solved;
+    @Getter
+    @Setter
+    private boolean requiresPolice;
     public Crime() {
         id = UUID.randomUUID();
         date = new Date();
