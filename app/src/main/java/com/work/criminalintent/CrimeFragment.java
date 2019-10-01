@@ -11,11 +11,11 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.RadioGroup;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import java.text.SimpleDateFormat;
+import java.util.UUID;
 
 public class CrimeFragment extends Fragment {
 
@@ -32,7 +32,7 @@ public class CrimeFragment extends Fragment {
         titleField = v.findViewById(R.id.crime_title);
         dateButton = v.findViewById(R.id.crime_date);
         solvedCheckBox = v.findViewById(R.id.crime_solved);
-
+        titleField.setText(crime.getTitle());
         titleField.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -49,10 +49,11 @@ public class CrimeFragment extends Fragment {
 
             }
         });
-
-        dateButton.setText(crime.getDate().toString());
+        SimpleDateFormat formatter = new SimpleDateFormat("EEEE, MMM dd, yyyy");
+        String date = formatter.format(crime.getDate());
+        dateButton.setText(date);
         dateButton.setEnabled(false);
-
+        solvedCheckBox.setChecked(crime.isSolved());
         solvedCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -66,7 +67,8 @@ public class CrimeFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        crime = new Crime();
+        UUID crimeId = (UUID) getActivity().getIntent().getSerializableExtra(CrimeActivity.EXTRA_CRIME_ID);
+        crime = CrimeLab.get(getActivity()).getCrime(crimeId);
     }
 
 }

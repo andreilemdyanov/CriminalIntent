@@ -1,7 +1,6 @@
 package com.work.criminalintent;
 
 import android.content.Context;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -29,6 +28,7 @@ public class CrimeLab {
     public List<Crime> getCrimes() {
         return crimes;
     }
+
     public Crime getCrime(UUID uuid) {
         Crime resCrime = null;
         for (Crime crime : crimes) {
