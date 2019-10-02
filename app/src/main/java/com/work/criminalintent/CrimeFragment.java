@@ -1,6 +1,7 @@
 package com.work.criminalintent;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -15,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.UUID;
 
 public class CrimeFragment extends Fragment {
@@ -25,6 +27,8 @@ public class CrimeFragment extends Fragment {
     private EditText titleField;
     private Button dateButton;
     private CheckBox solvedCheckBox;
+    private Button begin;
+    private Button end;
 
     public static CrimeFragment newInstance(UUID crimeId) {
         Bundle args = new Bundle();
@@ -71,6 +75,37 @@ public class CrimeFragment extends Fragment {
             }
         });
 
+        begin = v.findViewById(R.id.first_crime);
+        end = v.findViewById(R.id.last_crime);
+
+        final List<Crime> crimes = CrimeLab.get(getActivity()).getCrimes();
+        if (crime.getId().equals(crimes.get(0).getId())) {
+            begin.setEnabled(false);
+        } else {
+            begin.setEnabled(true);
+        }
+
+        if (crime.getId().equals(crimes.get(crimes.size()-1).getId())) {
+            end.setEnabled(false);
+        } else {
+            end.setEnabled(true);
+        }
+
+        begin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = CrimePagerActivity.newIntent(getActivity(), crimes.get(0).getId());
+                startActivity(intent);
+            }
+        });
+
+        end.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = CrimePagerActivity.newIntent(getActivity(), crimes.get(crimes.size()-1).getId());
+                startActivity(intent);
+            }
+        });
         return v;
     }
 
