@@ -6,32 +6,32 @@ import java.util.List;
 import java.util.UUID;
 
 public class CrimeLab {
-    private static CrimeLab crimeLab;
-    private List<Crime> crimes;
+    private static CrimeLab sCrimelab;
+    private List<Crime> mCrimes;
 
     private CrimeLab(Context context) {
-        crimes = new ArrayList<>();
+        mCrimes = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
             Crime crime = new Crime();
             crime.setTitle("Crime #" + i);
             crime.setSolved(i % 2 == 0);
-            crimes.add(crime);
+            mCrimes.add(crime);
         }
     }
 
     public static CrimeLab get(Context context) {
-        if (crimeLab == null) {
-            crimeLab = new CrimeLab(context);
+        if (sCrimelab == null) {
+            sCrimelab = new CrimeLab(context);
         }
-        return crimeLab;
+        return sCrimelab;
     }
     public List<Crime> getCrimes() {
-        return crimes;
+        return mCrimes;
     }
 
     public Crime getCrime(UUID uuid) {
         Crime resCrime = null;
-        for (Crime crime : crimes) {
+        for (Crime crime : mCrimes) {
             if (crime.getId().equals(uuid)) {
                 resCrime = crime;
             }

@@ -17,8 +17,8 @@ public class CrimePagerActivity extends AppCompatActivity {
 
     private static final  String EXTRA_CRIME_ID = "android.criminalintent.crime_id";
 
-    private ViewPager viewPager;
-    private List<Crime> crimes;
+    private ViewPager mViewPager;
+    private List<Crime> mCrimes;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -27,27 +27,27 @@ public class CrimePagerActivity extends AppCompatActivity {
 
         UUID crimeId = (UUID) getIntent().getSerializableExtra(EXTRA_CRIME_ID);
 
-        viewPager = findViewById(R.id.crime_view_pager);
+        mViewPager = findViewById(R.id.crime_view_pager);
 
-        crimes = CrimeLab.get(this).getCrimes();
+        mCrimes = CrimeLab.get(this).getCrimes();
         FragmentManager fragmentManager = getSupportFragmentManager();
-        viewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager,
+        mViewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager,
                 FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
             @NonNull
             @Override
             public Fragment getItem(int position) {
-                Crime crime = crimes.get(position);
+                Crime crime = mCrimes.get(position);
                 return CrimeFragment.newInstance(crime.getId());
             }
 
             @Override
             public int getCount() {
-                return crimes.size();
+                return mCrimes.size();
             }
         });
-        for (int i = 0; i < crimes.size(); i++) {
-            if (crimes.get(i).getId().equals(crimeId)) {
-                viewPager.setCurrentItem(i);
+        for (int i = 0; i < mCrimes.size(); i++) {
+            if (mCrimes.get(i).getId().equals(crimeId)) {
+                mViewPager.setCurrentItem(i);
                 break;
             }
         }

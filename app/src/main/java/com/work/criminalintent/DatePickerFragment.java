@@ -23,7 +23,7 @@ public class DatePickerFragment extends DialogFragment {
     private static final String ARG_DATE = "date";
     public static final String EXTRA_DATE = "com.work.criminalintent.date";
 
-    private DatePicker datePicker;
+    private DatePicker mDatePicker;
 
     @NonNull
     @Override
@@ -39,16 +39,16 @@ public class DatePickerFragment extends DialogFragment {
         View v = LayoutInflater.from(getActivity())
                 .inflate(R.layout.dialog_date, null);
 
-        datePicker = v.findViewById(R.id.dialog_date_picker);
-        datePicker.init(year, month, day, null);
+        mDatePicker = v.findViewById(R.id.dialog_date_picker);
+        mDatePicker.init(year, month, day, null);
         return new AlertDialog.Builder(getActivity())
                 .setTitle(R.string.date_picker_title)
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        int year = datePicker.getYear();
-                        int month = datePicker.getMonth();
-                        int day = datePicker.getDayOfMonth();
+                        int year = mDatePicker.getYear();
+                        int month = mDatePicker.getMonth();
+                        int day = mDatePicker.getDayOfMonth();
                         Date date = new GregorianCalendar(year, month, day).getTime();
                         sendResult(Activity.RESULT_OK, date);
                     }

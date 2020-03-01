@@ -17,15 +17,15 @@ import java.util.List;
 
 public class CrimeListFragment extends Fragment {
 
-    private RecyclerView crimeRecyclerView;
-    private CrimeAdapter adapter;
+    private RecyclerView mCrimeRecyclerView;
+    private CrimeAdapter mAdapter;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_crime_list, container, false);
-        crimeRecyclerView = view.findViewById(R.id.crime_recycler_view);
-        crimeRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mCrimeRecyclerView = view.findViewById(R.id.crime_recycler_view);
+        mCrimeRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         updateUI();
         return view;
     }
@@ -39,39 +39,39 @@ public class CrimeListFragment extends Fragment {
     private void updateUI() {
         CrimeLab crimeLab = CrimeLab.get(getActivity());
         List<Crime> crimes = crimeLab.getCrimes();
-        if (adapter == null) {
-            adapter = new CrimeAdapter(crimes);
-            crimeRecyclerView.setAdapter(adapter);
+        if (mAdapter == null) {
+            mAdapter = new CrimeAdapter(crimes);
+            mCrimeRecyclerView.setAdapter(mAdapter);
         } else {
-            adapter.notifyDataSetChanged();
+            mAdapter.notifyDataSetChanged();
         }
     }
 
     private class CrimeHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        private TextView titleTextView;
-        private TextView dateTextView;
-        private ImageView solvedImageView;
-        private Crime crime;
+        private TextView mTitleTextView;
+        private TextView mDateTextView;
+        private ImageView mSolvedImageView;
+        private Crime mCrime;
 
         public CrimeHolder(LayoutInflater inflater, ViewGroup parent) {
             super(inflater.inflate(R.layout.list_item_crime, parent, false));
             itemView.setOnClickListener(this);
-            titleTextView = itemView.findViewById(R.id.crime_title);
-            dateTextView = itemView.findViewById(R.id.crime_date);
-            solvedImageView = itemView.findViewById(R.id.crime_solved);
+            mTitleTextView = itemView.findViewById(R.id.crime_title);
+            mDateTextView = itemView.findViewById(R.id.crime_date);
+            mSolvedImageView = itemView.findViewById(R.id.crime_solved);
         }
         public void bind(Crime crime) {
-            this.crime = crime;
-            titleTextView.setText(crime.getTitle());
+            this.mCrime = crime;
+            mTitleTextView.setText(crime.getTitle());
             SimpleDateFormat formatter = new SimpleDateFormat("EEEE, MMM dd, yyyy");
             String date = formatter.format(crime.getDate());
-            dateTextView.setText(date);
-            solvedImageView.setVisibility(crime.isSolved() ? View.VISIBLE : View.GONE);
+            mDateTextView.setText(date);
+            mSolvedImageView.setVisibility(crime.isSolved() ? View.VISIBLE : View.GONE);
         }
 
         @Override
         public void onClick(View view) {
-            Intent intent = CrimePagerActivity.newIntent(getActivity(),crime.getId());
+            Intent intent = CrimePagerActivity.newIntent(getActivity(), mCrime.getId());
             startActivity(intent);
         }
 
@@ -79,10 +79,10 @@ public class CrimeListFragment extends Fragment {
 
     private class CrimeAdapter extends RecyclerView.Adapter<CrimeHolder> {
 
-        private List<Crime> crimes;
+        private List<Crime> mCrimes;
 
         public CrimeAdapter(List<Crime> crimes) {
-            this.crimes = crimes;
+            this.mCrimes = crimes;
         }
 
         @NonNull
@@ -94,13 +94,13 @@ public class CrimeListFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull CrimeHolder holder, int position) {
-            Crime crime = crimes.get(position);
+            Crime crime = mCrimes.get(position);
             holder.bind(crime);
         }
 
         @Override
         public int getItemCount() {
-            return crimes.size();
+            return mCrimes.size();
         }
     }
 }
