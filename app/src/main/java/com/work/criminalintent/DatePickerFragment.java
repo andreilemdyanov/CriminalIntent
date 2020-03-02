@@ -43,15 +43,13 @@ public class DatePickerFragment extends DialogFragment {
         mDatePicker.init(year, month, day, null);
         return new AlertDialog.Builder(getActivity())
                 .setTitle(R.string.date_picker_title)
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        int year = mDatePicker.getYear();
-                        int month = mDatePicker.getMonth();
-                        int day = mDatePicker.getDayOfMonth();
-                        Date date = new GregorianCalendar(year, month, day).getTime();
-                        sendResult(Activity.RESULT_OK, date);
-                    }
+                .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                    int yearPicker = mDatePicker.getYear();
+                    int monthPicker = mDatePicker.getMonth();
+                    int dayPicker = mDatePicker.getDayOfMonth();
+                    Date datePicker = new GregorianCalendar(yearPicker, monthPicker, dayPicker).getTime();
+                    sendResult(Activity.RESULT_OK, datePicker);
+
                 })
                 .setView(v)
                 .create();

@@ -7,11 +7,13 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
@@ -72,21 +74,15 @@ public class CrimeFragment extends Fragment {
 
         updateDate();
 
-        mDateButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentManager manager = getFragmentManager();
-                DatePickerFragment dialog = DatePickerFragment.newInstance(mCrime.getDate());
-                dialog.setTargetFragment(CrimeFragment.this, REQUEST_DATE);
-                dialog.show(manager, DIALOG_DATE);
-            }
+        mDateButton.setOnClickListener((view) -> {
+            FragmentManager manager = getFragmentManager();
+            DatePickerFragment dialog = DatePickerFragment.newInstance(mCrime.getDate());
+            dialog.setTargetFragment(CrimeFragment.this, REQUEST_DATE);
+            dialog.show(manager, DIALOG_DATE);
         });
         mSolvedCheckBox.setChecked(mCrime.isSolved());
-        mSolvedCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                mCrime.setSolved(b);
-            }
+        mSolvedCheckBox.setOnCheckedChangeListener((compoundButton, b) -> {
+            mCrime.setSolved(b);
         });
 
         mBegin = v.findViewById(R.id.first_crime);
@@ -105,20 +101,14 @@ public class CrimeFragment extends Fragment {
             mEnd.setEnabled(true);
         }
 
-        mBegin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = CrimePagerActivity.newIntent(getActivity(), crimes.get(0).getId());
-                startActivity(intent);
-            }
+        mBegin.setOnClickListener((view) -> {
+            Intent intent = CrimePagerActivity.newIntent(getActivity(), crimes.get(0).getId());
+            startActivity(intent);
         });
 
-        mEnd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = CrimePagerActivity.newIntent(getActivity(), crimes.get(crimes.size() - 1).getId());
-                startActivity(intent);
-            }
+        mEnd.setOnClickListener((view) -> {
+            Intent intent = CrimePagerActivity.newIntent(getActivity(), crimes.get(crimes.size() - 1).getId());
+            startActivity(intent);
         });
         return v;
     }
@@ -126,8 +116,26 @@ public class CrimeFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         UUID crimeId = (UUID) getArguments().getSerializable(ARG_CRIME_ID);
         mCrime = CrimeLab.get(getActivity()).getCrime(crimeId);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.fragment_crime, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.delete_crime:
+                CrimeLab.get(getActivity()).deleteCrime(mCrime);
+                getActivity().finish();
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
