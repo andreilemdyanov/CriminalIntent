@@ -6,7 +6,7 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import com.work.criminalintent.kt.database.CrimeBaseHelper
 import com.work.criminalintent.kt.database.CrimeCursorWrapper
-import com.work.criminalintent.kt.database.CrimeDbSchema.CrimeTable
+import com.work.criminalintent.kt.database.CrimeTable
 import java.util.*
 import kotlin.collections.ArrayList
 

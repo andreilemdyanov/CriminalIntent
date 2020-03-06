@@ -3,7 +3,6 @@ package com.work.criminalintent.kt.database
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import com.work.criminalintent.kt.database.CrimeDbSchema.CrimeTable
 
 class CrimeBaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, VERSION) {
 

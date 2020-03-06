@@ -3,7 +3,6 @@ package com.work.criminalintent.kt.database
 import android.database.Cursor
 import android.database.CursorWrapper
 import com.work.criminalintent.kt.Crime
-import com.work.criminalintent.kt.database.CrimeDbSchema.CrimeTable
 import java.util.*
 
 class CrimeCursorWrapper(cursor: Cursor) : CursorWrapper(cursor) {
