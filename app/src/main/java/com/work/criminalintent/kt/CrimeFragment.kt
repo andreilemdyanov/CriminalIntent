@@ -3,10 +3,13 @@ package com.work.criminalintent.kt
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.provider.ContactsContract
 import android.text.Editable
 import android.text.TextWatcher
 import android.text.format.DateFormat
+import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import com.work.criminalintent.R
@@ -18,6 +21,7 @@ const val ARG_CRIME_ID = "crime_id"
 class CrimeFragment : Fragment() {
     val DIALOG_DATE = "DialogDate"
     val REQUEST_DATE = 0
+    val REQUEST_CONTACT = 1
 
     private var _binding: FragmentCrimeBinding? = null
     private lateinit var mCrime: Crime
@@ -61,6 +65,21 @@ class CrimeFragment : Fragment() {
             mCrime.isSolved = isChecked
         }
 
+        val pickContact = Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI)
+        binding.chooseSuspect.setOnClickListener {
+            startActivityForResult(pickContact, REQUEST_CONTACT)
+        }
+
+        binding.crimeReport.setOnClickListener {
+            Intent(Intent.ACTION_SEND).apply {
+                type = "text/plain"
+                putExtra(Intent.EXTRA_TEXT, getCrimeReport())
+                putExtra(Intent.EXTRA_SUBJECT, getString(R.string.crime_report_subject))
+                val i = Intent.createChooser(this, getString(R.string.send_report))
+                startActivity(i)
+            }
+        }
+
         val crimes = CrimeLab.get(activity as Context).getCrimes()
         binding.firstCrime.isEnabled = mCrime.id != crimes.first().id
 
@@ -74,6 +93,13 @@ class CrimeFragment : Fragment() {
         binding.lastCrime.setOnClickListener {
             val intent = CrimePagerActivity.newIntent(activity as Context, crimes.last().id)
             startActivity(intent)
+        }
+
+        if (mCrime.suspect != null) binding.chooseSuspect.text = mCrime.suspect
+
+        val packageManager = activity?.packageManager
+        if (packageManager?.resolveActivity(pickContact, PackageManager.MATCH_DEFAULT_ONLY) == null) {
+            binding.chooseSuspect.isEnabled = false
         }
         return v
     }
@@ -112,8 +138,20 @@ class CrimeFragment : Fragment() {
             val date = data?.getSerializableExtra(DatePickerFragment().EXTRA_DATE) as Date
             mCrime.date = date
             updateDate()
+        } else if (requestCode == REQUEST_CONTACT && data != null) {
+            val contactUri = data.data
+            val queryFields = arrayOf(ContactsContract.Contacts.DISPLAY_NAME)
+            activity?.contentResolver?.query(contactUri!!, queryFields, null, null, null).use {
+                if (it?.count == 0) return
+                it?.moveToFirst()
+                val suspect = it?.getString(0)
+                mCrime.suspect = suspect
+                binding.chooseSuspect.text = suspect
+            }
         }
+
     }
+
 
     private fun updateDate() {
         binding.crimeDate.text = mCrime.date.toString()

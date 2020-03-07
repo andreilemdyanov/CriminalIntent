@@ -1,7 +1,6 @@
 package com.work.criminalintent.kt
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import android.widget.ImageView
@@ -156,7 +155,6 @@ class CrimeListFragment : Fragment() {
 
         override fun onClick(view: View) {
             val intent = CrimePagerActivity.newIntent(activity as Context, mCrime.id)
-            intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
             startActivity(intent)
         }
 
