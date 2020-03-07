@@ -23,6 +23,7 @@ const val ARG_CRIME_ID = "crime_id"
 
 class CrimeFragment : Fragment() {
     val DIALOG_DATE = "DialogDate"
+    val DIALOG_PHOTO = "DialogPhoto"
     val REQUEST_DATE = 0
     val REQUEST_CONTACT = 1
     val REQUEST_PHOTO = 2
@@ -47,6 +48,13 @@ class CrimeFragment : Fragment() {
         _binding = FragmentCrimeBinding.inflate(inflater, container, false)
         val v = binding.root
         val packageManager = activity?.packageManager
+
+        binding.crimePhoto.setOnClickListener {
+            if (binding.crimePhoto.drawable != null) {
+                val dialog = PhotoFragment.newInstance(mPhotoFile.path)
+                dialog.show(fragmentManager!!, DIALOG_PHOTO)
+            }
+        }
 
         val captureImage = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         val canTakePhoto = mPhotoFile != null && captureImage.resolveActivity(packageManager!!) != null
