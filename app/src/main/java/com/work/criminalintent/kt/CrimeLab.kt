@@ -7,11 +7,13 @@ import android.database.sqlite.SQLiteDatabase
 import com.work.criminalintent.kt.database.CrimeBaseHelper
 import com.work.criminalintent.kt.database.CrimeCursorWrapper
 import com.work.criminalintent.kt.database.CrimeTable
+import java.io.File
 import java.util.*
 import kotlin.collections.ArrayList
 
 class CrimeLab private constructor(context: Context) {
 
+    private val mContext: Context = context
     private val mDatabase: SQLiteDatabase = CrimeBaseHelper(context).writableDatabase
 
     companion object {
@@ -76,5 +78,10 @@ class CrimeLab private constructor(context: Context) {
                 null,
                 null)
         return CrimeCursorWrapper(cursor)
+    }
+
+    fun getPhotoFile(crime: Crime): File {
+        val filesDir = mContext.filesDir
+        return File(filesDir, crime.getPhotoFileName())
     }
 }

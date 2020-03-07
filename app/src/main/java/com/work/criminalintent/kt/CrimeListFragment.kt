@@ -1,6 +1,5 @@
 package com.work.criminalintent.kt
 
-import android.content.Context
 import android.os.Bundle
 import android.view.*
 import android.widget.ImageView
@@ -35,8 +34,8 @@ class CrimeListFragment : Fragment() {
 
         binding.addCrimeButton.setOnClickListener {
             Crime().apply {
-                CrimeLab.get(activity as Context).addCrime(this)
-                val intent = CrimePagerActivity.newIntent(activity as Context, this.id)
+                CrimeLab.get(requireActivity()).addCrime(this)
+                val intent = CrimePagerActivity.newIntent(requireActivity(), this.id)
                 startActivity(intent)
             }
         }
@@ -59,7 +58,7 @@ class CrimeListFragment : Fragment() {
     }
 
     private fun updateUI() {
-        val crimes = CrimeLab.get(activity as Context).getCrimes()
+        val crimes = CrimeLab.get(requireActivity()).getCrimes()
         if (mAdapter == null) {
             mAdapter = CrimeAdapter(crimes)
             binding.crimeRecyclerView.adapter = mAdapter
@@ -88,8 +87,8 @@ class CrimeListFragment : Fragment() {
         when (item.itemId) {
             R.id.new_crime -> {
                 Crime().apply {
-                    CrimeLab.get(activity as Context).addCrime(this)
-                    val intent = CrimePagerActivity.newIntent(activity as Context, this.id)
+                    CrimeLab.get(requireActivity()).addCrime(this)
+                    val intent = CrimePagerActivity.newIntent(requireActivity(), this.id)
                     startActivity(intent)
                 }
                 return true
@@ -107,7 +106,7 @@ class CrimeListFragment : Fragment() {
     }
 
     private fun updateSubtitle() {
-        val crimeCount = CrimeLab.get(activity as Context).getCrimes().size
+        val crimeCount = CrimeLab.get(requireActivity()).getCrimes().size
         var subtitle: String? = resources.getQuantityString(R.plurals.subtitle_plural, crimeCount, crimeCount)
         if (!mSubtitleVisible) {
             subtitle = null
@@ -117,7 +116,7 @@ class CrimeListFragment : Fragment() {
     }
 
     private fun updateEmptyTitle() {
-        if (CrimeLab.get(activity as Context).getCrimes().isEmpty()) {
+        if (CrimeLab.get(requireActivity()).getCrimes().isEmpty()) {
             binding.emptyTitle.visibility = View.VISIBLE
             binding.addCrimeButton.visibility = View.VISIBLE
         } else {
@@ -154,7 +153,7 @@ class CrimeListFragment : Fragment() {
         }
 
         override fun onClick(view: View) {
-            val intent = CrimePagerActivity.newIntent(activity as Context, mCrime.id)
+            val intent = CrimePagerActivity.newIntent(requireActivity(), mCrime.id)
             startActivity(intent)
         }
 
