@@ -33,6 +33,7 @@ import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import com.bumptech.glide.Glide;
 import com.work.criminalintent.utils.PictureUtils;
 
 import java.io.File;
@@ -283,10 +284,10 @@ public class CrimeFragment extends Fragment {
         if (mPhotoFile == null || !mPhotoFile.exists()) {
             mPhotoView.setImageDrawable(null);
         } else {
-            Bitmap bitmap = PictureUtils.getScaledBitmap(
-                    mPhotoFile.getPath(), getActivity()
-            );
-            mPhotoView.setImageBitmap(bitmap);
+            Glide.with(getActivity())
+                    .load(mPhotoFile)
+                    .centerCrop()
+                    .into(mPhotoView);
 
         }
     }
