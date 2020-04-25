@@ -12,7 +12,7 @@ public class Crime {
 
 
     public Crime() {
-       this(UUID.randomUUID());
+        this(UUID.randomUUID());
     }
 
     public Crime(UUID id) {
@@ -47,6 +47,7 @@ public class Crime {
     public void setSolved(boolean solved) {
         mSolved = solved;
     }
+
     public String getSuspect() {
         return mSuspect;
     }
@@ -55,4 +56,7 @@ public class Crime {
         mSuspect = suspect;
     }
 
+    public String getPhotoFileName() {
+        return "IMG_" + getId().toString() + ".jpg";
+    }
 }
