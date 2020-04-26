@@ -45,9 +45,11 @@ public class CrimeFragment extends Fragment {
 
     private static final String ARG_CRIME_ID = "crime_id";
     private static final String DIALOG_DATE = "DialogDate";
+    private static final String DIALOG_PHOTO = "DialogPhoto";
     private static final int REQUEST_DATE = 0;
     private static final int REQUEST_CONTACT = 1;
     private static final int REQUEST_PHOTO = 2;
+    private static final int REQUEST_PHOTO_DIALOG = 3;
 
     private Crime mCrime;
     private File mPhotoFile;
@@ -132,6 +134,13 @@ public class CrimeFragment extends Fragment {
             DatePickerFragment dialog = DatePickerFragment.newInstance(mCrime.getDate());
             dialog.setTargetFragment(CrimeFragment.this, REQUEST_DATE);
             dialog.show(manager, DIALOG_DATE);
+        });
+
+        mPhotoView.setOnClickListener((view) -> {
+            FragmentManager manager = getFragmentManager();
+            PhotoDialogFragment dialog = PhotoDialogFragment.newInstance(mPhotoFile);
+            dialog.setTargetFragment(CrimeFragment.this, REQUEST_PHOTO_DIALOG);
+            dialog.show(manager, DIALOG_PHOTO);
         });
         mSolvedCheckBox.setChecked(mCrime.isSolved());
         mSolvedCheckBox.setOnCheckedChangeListener((compoundButton, b) -> {
