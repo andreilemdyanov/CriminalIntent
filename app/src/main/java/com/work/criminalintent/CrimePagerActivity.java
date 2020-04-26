@@ -3,6 +3,8 @@ package com.work.criminalintent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -62,6 +64,10 @@ public class CrimePagerActivity extends AppCompatActivity implements CrimeFragme
 
     @Override
     public void onCrimeUpdated(Crime crime) {
+    }
+
+    @Override
+    public void onCrimeChanged(Crime crime) {
 
     }
 }

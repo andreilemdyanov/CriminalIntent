@@ -1,6 +1,7 @@
 package com.work.criminalintent;
 
 import android.content.Intent;
+import android.util.Log;
 
 import androidx.fragment.app.Fragment;
 
@@ -34,5 +35,11 @@ public class CrimeListActivity extends SingleFragmentActivity implements CrimeLi
         CrimeListFragment listFragment = (CrimeListFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.fragment_container);
         listFragment.updateUI();
+        Log.d("CrimeListActivity", "onCrimeUpdated");
+    }
+
+    @Override
+    public void onCrimeChanged(Crime crime) {
+        onCrimeSelected(crime);
     }
 }

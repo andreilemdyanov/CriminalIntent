@@ -67,6 +67,7 @@ public class CrimeFragment extends Fragment {
 
     public interface Callbacks {
         void onCrimeUpdated(Crime crime);
+        void onCrimeChanged(Crime crime);
     }
 
     @Override
@@ -202,13 +203,15 @@ public class CrimeFragment extends Fragment {
         }
 
         mBeginButton.setOnClickListener((view) -> {
-            Intent intent = CrimePagerActivity.newIntent(getActivity(), crimes.get(0).getId());
-            startActivity(intent);
+//                Intent intent = CrimePagerActivity.newIntent(getActivity(), crimes.get(0).getId());
+//                startActivity(intent);
+                mCallbacks.onCrimeChanged(crimes.get(0));
         });
 
         mEndButton.setOnClickListener((view) -> {
-            Intent intent = CrimePagerActivity.newIntent(getActivity(), crimes.get(crimes.size() - 1).getId());
-            startActivity(intent);
+//            Intent intent = CrimePagerActivity.newIntent(getActivity(), crimes.get(crimes.size() - 1).getId());
+//            startActivity(intent);
+            mCallbacks.onCrimeChanged(crimes.get(crimes.size() - 1));
         });
         return v;
     }
