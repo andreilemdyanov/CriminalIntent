@@ -47,12 +47,7 @@ public class CrimePagerActivity extends AppCompatActivity implements CrimeFragme
                 return mCrimes.size();
             }
         });
-        for (int i = 0; i < mCrimes.size(); i++) {
-            if (mCrimes.get(i).getId().equals(crimeId)) {
-                mViewPager.setCurrentItem(i);
-                break;
-            }
-        }
+        setItem(crimeId);
 
     }
 
@@ -62,12 +57,21 @@ public class CrimePagerActivity extends AppCompatActivity implements CrimeFragme
         return intent;
     }
 
+    private void setItem(UUID crimeId) {
+        for (int i = 0; i < mCrimes.size(); i++) {
+            if (mCrimes.get(i).getId().equals(crimeId)) {
+                mViewPager.setCurrentItem(i);
+                break;
+            }
+        }
+    }
+
     @Override
     public void onCrimeUpdated(Crime crime) {
     }
 
     @Override
     public void onCrimeChanged(Crime crime) {
-
+        setItem(crime.getId());
     }
 }

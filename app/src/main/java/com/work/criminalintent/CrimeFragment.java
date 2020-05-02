@@ -203,14 +203,10 @@ public class CrimeFragment extends Fragment {
         }
 
         mBeginButton.setOnClickListener((view) -> {
-//                Intent intent = CrimePagerActivity.newIntent(getActivity(), crimes.get(0).getId());
-//                startActivity(intent);
                 mCallbacks.onCrimeChanged(crimes.get(0));
         });
 
         mEndButton.setOnClickListener((view) -> {
-//            Intent intent = CrimePagerActivity.newIntent(getActivity(), crimes.get(crimes.size() - 1).getId());
-//            startActivity(intent);
             mCallbacks.onCrimeChanged(crimes.get(crimes.size() - 1));
         });
         return v;
@@ -222,7 +218,9 @@ public class CrimeFragment extends Fragment {
         setHasOptionsMenu(true);
         UUID crimeId = (UUID) getArguments().getSerializable(ARG_CRIME_ID);
         mCrime = CrimeLab.get(getActivity()).getCrime(crimeId);
-        mPhotoFile = CrimeLab.get(getActivity()).getPhotoFile(mCrime);
+        if (mCrime != null) {
+            mPhotoFile = CrimeLab.get(getActivity()).getPhotoFile(mCrime);
+        }
     }
 
     @Override
