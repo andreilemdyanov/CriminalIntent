@@ -1,7 +1,6 @@
 package com.work.criminalintent;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,7 +19,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
+import com.work.criminalintent.database.Repository;
+import com.work.criminalintent.model.Crime;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
@@ -35,6 +34,7 @@ public class CrimeListFragment extends Fragment {
     private TextView mEmptyTitle;
     private Button mAddCrime;
     private Callbacks mCallbacks;
+    private Repository mRepository;
 
     public interface Callbacks {
         void onCrimeSelected(Crime crime);
@@ -50,6 +50,7 @@ public class CrimeListFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        mRepository = Repository.get(getContext());
     }
 
     @Nullable
@@ -61,7 +62,7 @@ public class CrimeListFragment extends Fragment {
         mAddCrime = view.findViewById(R.id.add_crime_button);
         mAddCrime.setOnClickListener((v) -> {
             Crime crime = new Crime();
-            CrimeLab.get(getActivity()).addCrime(crime);
+            mRepository.addCrime(crime);
             mCallbacks.onCrimeSelected(crime);
             updateUI();
         });
@@ -91,7 +92,8 @@ public class CrimeListFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.new_crime:
                 Crime crime = new Crime();
-                CrimeLab.get(getActivity()).addCrime(crime);
+                long id = mRepository.addCrime(crime);
+                crime.setId(id);
                 updateUI();
                 mCallbacks.onCrimeSelected(crime);
                 return true;
@@ -125,8 +127,7 @@ public class CrimeListFragment extends Fragment {
     }
 
     public void updateUI() {
-        CrimeLab crimeLab = CrimeLab.get(getActivity());
-        List<Crime> crimes = crimeLab.getCrimes();
+        List<Crime> crimes = mRepository.getCrimes();
         if (mAdapter == null) {
             mAdapter = new CrimeAdapter(crimes);
             mCrimeRecyclerView.setAdapter(mAdapter);
@@ -145,8 +146,7 @@ public class CrimeListFragment extends Fragment {
 
 
     private void updateSubtitle() {
-        CrimeLab crimeLab = CrimeLab.get(getActivity());
-        int crimeCount = crimeLab.getCrimes().size();
+        int crimeCount = mRepository.getCrimes().size();
         String subtitle = getResources().getQuantityString(R.plurals.subtitle_plural, crimeCount, crimeCount);
         if (!mSubtitleVisible) {
             subtitle = null;
@@ -156,7 +156,7 @@ public class CrimeListFragment extends Fragment {
     }
 
     private void updateEmptyTitle() {
-        if (CrimeLab.get(getActivity()).getCrimes().size() == 0) {
+        if (mRepository.getCrimes().size() == 0) {
             mEmptyTitle.setVisibility(View.VISIBLE);
             mAddCrime.setVisibility(View.VISIBLE);
         } else {
@@ -228,7 +228,7 @@ public class CrimeListFragment extends Fragment {
 
         @Override
         public void onItemDismiss(int position) {
-            CrimeLab.get(getActivity()).deleteCrime(mCrimes.get(position));
+            mRepository.deleteCrime(mCrimes.get(position));
             mCrimes.remove(position);
             notifyItemRemoved(position);
             Log.d("CrimeListFragment", "onItemDismiss pos = " + position);

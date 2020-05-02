@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -26,21 +25,18 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ShareCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-
 import com.bumptech.glide.Glide;
-import com.work.criminalintent.utils.PictureUtils;
-
+import com.work.criminalintent.database.Repository;
+import com.work.criminalintent.model.Crime;
 import java.io.File;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 public class CrimeFragment extends Fragment {
 
@@ -64,6 +60,7 @@ public class CrimeFragment extends Fragment {
     private ImageButton mPhotoButton;
     private ImageView mPhotoView;
     private Callbacks mCallbacks;
+    private Repository mRepository;
 
     public interface Callbacks {
         void onCrimeUpdated(Crime crime);
@@ -76,9 +73,9 @@ public class CrimeFragment extends Fragment {
         mCallbacks = (Callbacks) context;
     }
 
-    public static CrimeFragment newInstance(UUID crimeId) {
+    public static CrimeFragment newInstance(long crimeId) {
         Bundle args = new Bundle();
-        args.putSerializable(ARG_CRIME_ID, crimeId);
+        args.putLong(ARG_CRIME_ID, crimeId);
         CrimeFragment fragment = new CrimeFragment();
         fragment.setArguments(args);
         return fragment;
@@ -88,7 +85,6 @@ public class CrimeFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_crime, container, false);
-
 
         mTitleField = v.findViewById(R.id.crime_title);
         mDateButton = v.findViewById(R.id.crime_date);
@@ -189,14 +185,15 @@ public class CrimeFragment extends Fragment {
         mBeginButton = v.findViewById(R.id.first_crime);
         mEndButton = v.findViewById(R.id.last_crime);
 
-        final List<Crime> crimes = CrimeLab.get(getActivity()).getCrimes();
-        if (mCrime.getId().equals(crimes.get(0).getId())) {
+        final List<Crime> crimes = mRepository.getCrimes();
+
+        if (mCrime.getId() == (crimes.get(0).getId())) {
             mBeginButton.setEnabled(false);
         } else {
             mBeginButton.setEnabled(true);
         }
 
-        if (mCrime.getId().equals(crimes.get(crimes.size() - 1).getId())) {
+        if (mCrime.getId() == (crimes.get(crimes.size() - 1).getId())) {
             mEndButton.setEnabled(false);
         } else {
             mEndButton.setEnabled(true);
@@ -216,10 +213,13 @@ public class CrimeFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        UUID crimeId = (UUID) getArguments().getSerializable(ARG_CRIME_ID);
-        mCrime = CrimeLab.get(getActivity()).getCrime(crimeId);
+        mRepository = Repository.get(getContext());
+        long crimeId = getArguments().getLong(ARG_CRIME_ID);
+        mCrime = mRepository.getCrime(crimeId);
         if (mCrime != null) {
-            mPhotoFile = CrimeLab.get(getActivity()).getPhotoFile(mCrime);
+            mPhotoFile = mRepository.getPhotoFile(mCrime);
+
+
         }
     }
 
@@ -227,7 +227,7 @@ public class CrimeFragment extends Fragment {
     public void onPause() {
         super.onPause();
 
-        CrimeLab.get(getActivity()).updateCrime(mCrime);
+        mRepository.updateCrime(mCrime);
     }
 
     @Override
@@ -240,7 +240,7 @@ public class CrimeFragment extends Fragment {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.delete_crime:
-                CrimeLab.get(getActivity()).deleteCrime(mCrime);
+                mRepository.deleteCrime(mCrime);
                 getActivity().finish();
             default:
                 return super.onOptionsItemSelected(item);
@@ -326,7 +326,7 @@ public class CrimeFragment extends Fragment {
     }
 
     private void updateCrime() {
-        CrimeLab.get(getActivity()).updateCrime(mCrime);
+        mRepository.updateCrime(mCrime);
         mCallbacks.onCrimeUpdated(mCrime);
     }
 }
