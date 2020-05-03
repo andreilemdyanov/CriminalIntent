@@ -316,12 +316,13 @@ public class CrimeFragment extends Fragment {
     private void updatePhotoView() {
         if (mPhotoFile == null || !mPhotoFile.exists()) {
             mPhotoView.setImageDrawable(null);
+            mPhotoView.setContentDescription(getString(R.string.crime_photo_no_image_description));
         } else {
             Glide.with(getActivity())
                     .load(mPhotoFile)
                     .centerCrop()
                     .into(mPhotoView);
-
+            mPhotoView.setContentDescription(getString(R.string.crime_photo_image_description));
         }
     }
 
