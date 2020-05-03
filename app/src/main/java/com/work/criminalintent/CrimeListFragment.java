@@ -62,7 +62,8 @@ public class CrimeListFragment extends Fragment {
         mAddCrime = view.findViewById(R.id.add_crime_button);
         mAddCrime.setOnClickListener((v) -> {
             Crime crime = new Crime();
-            mRepository.addCrime(crime);
+            long id = mRepository.addCrime(crime);
+            crime.setId(id);
             mCallbacks.onCrimeSelected(crime);
             updateUI();
         });
